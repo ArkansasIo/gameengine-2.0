@@ -2,6 +2,7 @@
 #define WOLFMAN_PHYSICS_H
 
 #include "qvector.h"
+#include <cmath>
 
 namespace WolfManAlpha {
 

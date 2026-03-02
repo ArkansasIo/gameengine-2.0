@@ -2,8 +2,8 @@
 #define DATAMANAGER_H
 
 #include "qstring.h"
-#include "qstring.h"
-#include "qstring.h"
+
+class QJsonObject;
 
 class DataManager {
 public:

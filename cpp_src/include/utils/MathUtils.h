@@ -4,6 +4,7 @@
 #include <cmath>
 #include <algorithm>
 #include <random>
+#include "qstring.h"
 
 namespace LunaLite {
 namespace Math {

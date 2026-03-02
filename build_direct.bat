@@ -38,7 +38,7 @@ for /r "%SRCDIR%" %%f in (*.cpp) do (
     if not "%%~nf"=="main.cpp" (
         set /a COMPILE_COUNT+=1
         REM Skip APIGUIWindow.cpp as it requires Qt
-        if not "%%~nf"=="APIGUIWindow.cpp" (
+        if not "%%~nf"=="APIGUIWindow" (
             echo   [!COMPILE_COUNT!] Compiling: %%~nf
             cl.exe /W0 /EHsc /std:c++17 /c "%%f" /Fo"%OBJDIR%\%%~nf.obj" /I"%SRCDIR%" 2>nul
             if !ERRORLEVEL! neq 0 (
@@ -64,16 +64,17 @@ echo.
 
 REM Create library
 echo Creating static library...
-set "ALLOBJ="
+set "OBJLIST=%BUILDDIR%\objlist.rsp"
+if exist "%OBJLIST%" del /f /q "%OBJLIST%"
 for %%f in ("%OBJDIR%\*.obj") do (
-    set "ALLOBJ=!ALLOBJ! "%%f""
+    >>"%OBJLIST%" echo "%%~ff"
 )
 
-lib.exe /OUT:"%LIBDIR%\LunaLite_Engine.lib" !ALLOBJ! 2>nul
+lib.exe /OUT:"%LIBDIR%\LunaLite_Engine.lib" @"%OBJLIST%" 2>nul
 
-if exist "%LIBDIR%\LunaLite_Engine.lib" (
-    echo   SUCCESS: Library created: %LIBDIR%\LunaLite_Engine.lib
-    for %%z in ("%LIBDIR%\LunaLite_Engine.lib") do echo   Size: %%~zz bytes
+if exist "!LIBDIR!\LunaLite_Engine.lib" (
+    echo   SUCCESS: Library created: !LIBDIR!\LunaLite_Engine.lib
+    for %%z in ("!LIBDIR!\LunaLite_Engine.lib") do echo   Size: %%~zz bytes
 ) else (
     echo   ERROR: Failed to create library
 )
@@ -81,4 +82,3 @@ if exist "%LIBDIR%\LunaLite_Engine.lib" (
 echo.
 echo Build complete!
 echo.
-pause

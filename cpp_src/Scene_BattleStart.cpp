@@ -1,4 +1,4 @@
-#include \"Scene_BattleStart.h\"
+#include "Scene_BattleStart.h"
 
 Scene_BattleStart::Scene_BattleStart() : _battlePhase(0) {
 }

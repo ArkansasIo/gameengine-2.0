@@ -1,4 +1,4 @@
-#include \"Game_Picture.h\"
+#include "Game_Picture.h"
 
 Game_Picture::Game_Picture(int pictureId) : _pictureId(pictureId) {
 }

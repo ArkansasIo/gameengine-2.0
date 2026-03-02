@@ -1,4 +1,4 @@
-#include \"ImageManager_Base.h\"
+#include "ImageManager_Base.h"
 
 ImageManager_Base& ImageManager_Base::instance() {
     static ImageManager_Base instance;

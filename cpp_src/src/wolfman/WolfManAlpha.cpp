@@ -137,7 +137,6 @@ void WolfMan::shutdown() {
     _network.stopServer();
     _audio.stopAll();
     _entities.destroyAllEntities();
-    _particles.ParticleSystem::~ParticleSystem();
     _engine.shutdown();
     _logger.info("WolfMan Alpha Engine shut down");
 }
