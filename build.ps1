@@ -1,236 +1,127 @@
-#!/usr/bin/env pwsh
-# LunaLite Build Script for Windows PowerShell
-# This script automates the build process for the LunaLite game engine
-
 param(
-    [string]$Configuration = "Release",
+    [ValidateSet('Debug', 'Release')]
+    [string]$Configuration = 'Release',
+    
     [switch]$EnableQt = $false,
     [switch]$CleanBuild = $false,
     [switch]$OpenSolution = $false,
-    [switch]$HelpMessage = $false
+    [switch]$Help = $false
 )
 
-# Display help
-if ($HelpMessage) {
-    Write-Host @"
-LunaLite Build Script
-====================
+# Colors
+$ColorOK = "Green"
+$ColorErr = "Red"
+$ColorWarn = "Yellow"
+$ColorInfo = "Cyan"
 
-Usage: .\build.ps1 [options]
+Write-Host ""
+Write-Host "====================================================" -ForegroundColor $ColorInfo
+Write-Host "  LunaLite Game Engine - Build System v1.0" -ForegroundColor $ColorInfo
+Write-Host "====================================================" -ForegroundColor $ColorInfo
+Write-Host ""
 
-Options:
-  -Configuration <string>   Build configuration: Release or Debug (default: Release)
-  -EnableQt                 Enable Qt5 support (default: OFF)
-  -CleanBuild              Remove build directory and rebuild from scratch
-  -OpenSolution            Open Visual Studio solution after configuration
-  -HelpMessage             Display this help message
-
-Examples:
-  .\build.ps1                                    # Build Release without Qt
-  .\build.ps1 -Configuration Debug              # Build Debug
-  .\build.ps1 -EnableQt -OpenSolution           # Enable Qt and open in VS
-  .\build.ps1 -CleanBuild                       # Clean build from scratch
-
-"@
+if ($Help) {
+    Write-Host "Usage: .\build.ps1 [options]"
+    Write-Host ""
+    Write-Host "Options:"
+    Write-Host "  -Configuration <Debug|Release>  Build configuration (default: Release)"
+    Write-Host "  -EnableQt                       Enable Qt5 support"
+    Write-Host "  -CleanBuild                     Remove previous build artifacts"
+    Write-Host "  -OpenSolution                   Open solution in Visual Studio"
+    Write-Host "  -Help                           Show this help message"
+    Write-Host ""
     exit 0
 }
 
 $ProjectRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
-$CppSrc = Join-Path $ProjectRoot "cpp_src"
+$SourceDir = Join-Path $ProjectRoot "cpp_src"
 $BuildDir = Join-Path $ProjectRoot "build"
-$Script:BuildSuccessful = $false
-
-# Color output functions
-function Write-Success {
-    Write-Host $args -ForegroundColor Green
-}
-
-function Write-Error-Custom {
-    Write-Host $args -ForegroundColor Red
-}
-
-function Write-Info {
-    Write-Host $args -ForegroundColor Cyan
-}
-
-function Write-Warning-Custom {
-    Write-Host $args -ForegroundColor Yellow
-}
-
-# Display header
-Write-Info @"
-╔════════════════════════════════════════════════════════╗
-║      LunaLite Game Engine - Build Script v1.0         ║
-╚════════════════════════════════════════════════════════╝
-"@
 
 # Check prerequisites
-Write-Info "`n[1/5] Checking prerequisites..."
+Write-Host "[1/4] Checking prerequisites..." -ForegroundColor $ColorInfo
 
-# Check CMake
-try {
-    $CMakeVersion = cmake --version | Select-Object -First 1
-    Write-Success "  ✓ CMake installed: $CMakeVersion"
-} catch {
-    Write-Error-Custom "  ✗ CMake not found. Please install from https://cmake.org/download/"
+$cmake = Get-Command cmake -ErrorAction SilentlyContinue
+if (-not $cmake) {
+    Write-Host "ERROR: CMake not found" -ForegroundColor $ColorErr
     exit 1
 }
+Write-Host "  OK: CMake found" -ForegroundColor $ColorOK
 
-# Check Git
-try {
-    $GitVersion = git --version
-    Write-Success "  ✓ Git installed: $GitVersion"
-} catch {
-    Write-Error-Custom "  ✗ Git not found."
+if (-not (Test-Path $SourceDir)) {
+    Write-Host "ERROR: Source directory not found: $SourceDir" -ForegroundColor $ColorErr
     exit 1
 }
+Write-Host "  OK: Source directory found" -ForegroundColor $ColorOK
 
-# Check source directory
-if (-not (Test-Path $CppSrc)) {
-    Write-Error-Custom "  ✗ Source directory not found: $CppSrc"
+if (-not (Test-Path "$SourceDir/CMakeLists.txt")) {
+    Write-Host "ERROR: CMakeLists.txt not found" -ForegroundColor $ColorErr
     exit 1
 }
-Write-Success "  ✓ Source directory found"
+Write-Host "  OK: CMakeLists.txt found" -ForegroundColor $ColorOK
 
-# Check CMakeLists.txt
-if (-not (Test-Path "$CppSrc/CMakeLists.txt")) {
-    Write-Error-Custom "  ✗ CMakeLists.txt not found in $CppSrc"
-    exit 1
-}
-Write-Success "  ✓ CMakeLists.txt found"
-
-# Clean build if requested
+# Clean if requested
 if ($CleanBuild) {
-    Write-Info "`n[2/5] Cleaning previous build..."
+    Write-Host "[2/4] Cleaning previous build..." -ForegroundColor $ColorInfo
     if (Test-Path $BuildDir) {
         Remove-Item -Recurse -Force $BuildDir -ErrorAction SilentlyContinue
-        Write-Success "  ✓ Build directory cleaned"
-    } else {
-        Write-Info "  - No previous build found"
+        Write-Host "  OK: Build directory cleaned" -ForegroundColor $ColorOK
     }
 }
 
 # Create build directory
-Write-Info "`n[2/5] Creating build directory..."
+Write-Host "[2/4] Setting up build directory..." -ForegroundColor $ColorInfo
 if (-not (Test-Path $BuildDir)) {
     New-Item -ItemType Directory -Path $BuildDir | Out-Null
 }
-Write-Success "  ✓ Build directory ready: $BuildDir"
+Write-Host "  OK: Build directory ready" -ForegroundColor $ColorOK
 
-# Configure CMake
-Write-Info "`n[3/5] Configuring CMake..."
+# Configure with CMake
+Write-Host "[3/4] Configuring CMake..." -ForegroundColor $ColorInfo
 Push-Location $BuildDir
 
-$CMakeArgs = @(
-    "-DUSE_QT5=$(if ($EnableQt) { 'ON' } else { 'OFF' })"
-    "../cpp_src"
-)
+$QtFlag = if ($EnableQt) { "ON" } else { "OFF" }
+$Output = & cmake -DENABLE_QT=$QtFlag "..\cpp_src" 2>&1
 
-Write-Info "  Command: cmake $CMakeArgs"
-
-try {
-    $Output = & cmake @CMakeArgs 2>&1
-    if ($LASTEXITCODE -eq 0) {
-        Write-Success "  ✓ CMake configuration successful"
-    } else {
-        Write-Error-Custom "  ✗ CMake configuration failed"
-        Write-Host $Output
-        Pop-Location
-        exit 1
-    }
-} catch {
-    Write-Error-Custom "  ✗ CMake configuration error: $_"
-    Write-Warning-Custom "    NOTE: Ensure Visual Studio or C++ build tools are installed"
-    Write-Warning-Custom "    Run from Developer Command Prompt for best results"
+if ($LASTEXITCODE -ne 0) {
+    Write-Host "ERROR: CMake configuration failed" -ForegroundColor $ColorErr
+    Write-Host $Output
     Pop-Location
     exit 1
 }
+Write-Host "  OK: CMake configuration complete" -ForegroundColor $ColorOK
 
-# Build the project
-Write-Info "`n[4/5] Building project (Configuration: $Configuration)..."
+# Build
+Write-Host "[4/4] Building project..." -ForegroundColor $ColorInfo
 
-try {
-    Write-Info "  Running: cmake --build . --config $Configuration --verbose"
-    $BuildOutput = & cmake --build . --config $Configuration --verbose 2>&1
-    
-    if ($LASTEXITCODE -eq 0) {
-        Write-Success "  ✓ Build completed successfully"
-        $Script:BuildSuccessful = $true
-    } else {
-        Write-Error-Custom "  ✗ Build failed"
-        Write-Host $BuildOutput
-        Pop-Location
-        exit 1
-    }
-} catch {
-    Write-Error-Custom "  ✗ Build error: $_"
+$BuildOutput = & cmake --build . --config $Configuration 2>&1
+if ($LASTEXITCODE -ne 0) {
+    Write-Host "ERROR: Build failed" -ForegroundColor $ColorErr
+    Write-Host $BuildOutput
     Pop-Location
     exit 1
 }
-
-# Find output executable
-Write-Info "`n[5/5] Verifying build output..."
-$ExePath = Join-Path $BuildDir $Configuration "LunaLite.exe"
-
-if (Test-Path $ExePath) {
-    Write-Success "  ✓ Executable created: $ExePath"
-    $ExeSize = (Get-Item $ExePath).Length / 1MB
-    Write-Success "    Size: $([Math]::Round($ExeSize, 2)) MB"
-} else {
-    Write-Warning-Custom "  ⚠ Executable not found at $ExePath"
-}
-
-# Check for library
-$LibPath = Join-Path $BuildDir "$Configuration" "LunaLite_Engine.lib"
-if (Test-Path $LibPath) {
-    Write-Success "  ✓ Library created: $LibPath"
-    $LibSize = (Get-Item $LibPath).Length / 1MB
-    Write-Success "    Size: $([Math]::Round($LibSize, 2)) MB"
-}
+Write-Host "  OK: Build complete" -ForegroundColor $ColorOK
 
 Pop-Location
 
-# Open solution if requested
-if ($OpenSolution) {
-    Write-Info "`n[+] Opening Visual Studio solution..."
-    $SlnPath = Join-Path $BuildDir "LunaLite.sln"
-    
-    if (Test-Path $SlnPath) {
-        & devenv $SlnPath
-        Write-Success "  ✓ Solution opened in Visual Studio"
-    } else {
-        Write-Warning-Custom "  ⚠ Solution file not found: $SlnPath"
-    }
-}
-
-# Display summary
-Write-Info @"
-╔════════════════════════════════════════════════════════╗
-║              Build Summary                             ║
-╚════════════════════════════════════════════════════════╝
-
-Configuration:   $Configuration
-Qt Support:      $(if ($EnableQt) { 'Enabled' } else { 'Disabled' })
-Build Directory: $BuildDir
-"@
-
-if ($Script:BuildSuccessful) {
-    Write-Success "Status:          ✓ SUCCESS"
-    Write-Info @"
-Next Steps:
-  1. Run executable: .\$Configuration\LunaLite.exe
-  2. Link library: LunaLite_Engine.lib in include/$BuildDir
-  3. Edit source: Modify files in cpp_src/
-
-Documentation:
-  - BUILD_INSTRUCTIONS.md    - Detailed build guide
-  - INTEGRATION_GUIDE.md      - System integration
-  - PROJECT_STATUS.md         - Project overview
-"@
-} else {
-    Write-Error-Custom "Status:          ✗ FAILED"
-    Write-Error-Custom "See output above for error details"
-    exit 1
-}
-
+# Summary
+Write-Host ""
+Write-Host "====================================================" -ForegroundColor $ColorInfo
+Write-Host "  Build Summary" -ForegroundColor $ColorInfo
+Write-Host "====================================================" -ForegroundColor $ColorInfo
+Write-Host ""
+Write-Host "Configuration:  $Configuration"
+Write-Host "Qt Support:     $(if ($EnableQt) { 'Enabled' } else { 'Disabled' })"
+Write-Host "Build Dir:      $BuildDir"
+Write-Host ""
+Write-Host "SUCCESS - Build completed!" -ForegroundColor $ColorOK
+Write-Host ""
+Write-Host "Output Files:"
+Write-Host "  - Executable: build\$Configuration\LunaLite.exe"
+Write-Host "  - Library:    build\$Configuration\LunaLite_Engine.lib"
+Write-Host ""
+Write-Host "Next Steps:"
+Write-Host "  1. Run: .\build\$Configuration\LunaLite.exe"
+Write-Host "  2. Link: build\$Configuration\LunaLite_Engine.lib"
+Write-Host "  3. Edit: cpp_src\ (modify source files)"
 Write-Host ""
