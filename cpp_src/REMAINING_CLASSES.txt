@@ -1,0 +1,89 @@
+﻿REMAINING C++ CLASSES TO CREATE
+================================
+
+Due to disk space limitations on C: drive, the following classes from the 
+TypeScript definitions still need to be converted to C++:
+
+GAME LOGIC CLASSES (High Priority):
+- Game_Action.h/cpp - Battle actions
+- Game_ActionResult.h/cpp - Action results
+- Game_BattlerBase.h/cpp - Base battler class
+- Game_Battler.h/cpp - Battler with states
+- Game_Actor.h/cpp - Player character
+- Game_Actors.h/cpp - Actor collection
+- Game_Enemy.h/cpp - Enemy character
+- Game_Troop.h/cpp - Enemy group
+- Game_Party.h/cpp - Player party
+- Game_CharacterBase.h/cpp - Character base
+- Game_Character.h/cpp - Map character
+- Game_Player.h/cpp - Player on map
+- Game_Event.h/cpp - Map event
+- Game_Follower.h/cpp - Party follower
+- Game_Followers.h/cpp - Follower collection
+- Game_Vehicle.h/cpp - Boat/ship/airship
+- Game_Map.h/cpp - Map data and logic
+- Game_CommonEvent.h/cpp - Common events
+- Game_Interpreter.h/cpp - Event interpreter
+- Game_Item.h/cpp - Item wrapper
+- Game_SelfSwitches.h/cpp - Self switches
+
+MANAGER CLASSES:
+- BattleManager.h/cpp - Battle system
+- DataManager.h/cpp - Database loading
+- ConfigManager.h/cpp - Config management
+- PluginManager.h/cpp - Plugin system
+- SoundManager.h/cpp - Sound effects
+- StorageManager.h/cpp - Save/load
+- TextManager.h/cpp - Text database
+
+DISPLAY CLASSES:
+- ScreenSprite.h/cpp - Screen overlay
+- Tilemap.h/cpp - Tilemap rendering
+- ShaderTilemap.h/cpp - WebGL tilemap
+- TilingSprite.h/cpp - Tiling sprite
+- ToneFilter.h/cpp - Color tone filter
+- ToneSprite.h/cpp - Tone overlay
+- Weather.h/cpp - Weather effects
+- WindowLayer.h/cpp - Window container
+
+WINDOW CLASSES:
+- Window_Base.h/cpp - Base window
+- Window_Selectable.h/cpp - Selectable window
+- Window_Command.h/cpp - Command window
+- Window_Help.h/cpp - Help window
+- Window_Gold.h/cpp - Gold window
+- Window_Status.h/cpp - Status window
+- Window_MenuCommand.h/cpp - Menu commands
+- Window_ItemList.h/cpp - Item list
+- Window_SkillList.h/cpp - Skill list
+- Window_EquipItem.h/cpp - Equipment list
+- Window_BattleLog.h/cpp - Battle log
+- Window_Message.h/cpp - Message window
+
+SCENE CLASSES:
+- Scene_Base.h/cpp - Base scene
+- Scene_Boot.h/cpp - Boot scene
+- Scene_Title.h/cpp - Title screen
+- Scene_Map.h/cpp - Map scene
+- Scene_Menu.h/cpp - Menu scene
+- Scene_Item.h/cpp - Item scene
+- Scene_Skill.h/cpp - Skill scene
+- Scene_Equip.h/cpp - Equipment scene
+- Scene_Status.h/cpp - Status scene
+- Scene_Battle.h/cpp - Battle scene
+- Scene_Shop.h/cpp - Shop scene
+- Scene_Name.h/cpp - Name input
+- Scene_Save.h/cpp - Save scene
+- Scene_Load.h/cpp - Load scene
+- Scene_GameEnd.h/cpp - Game end
+- Scene_Gameover.h/cpp - Game over
+
+TOTAL REMAINING: ~80+ classes (160+ files)
+
+WORKAROUND:
+Since C: drive is full, you need to:
+1. Free up space on C: drive (clear temp files, empty recycle bin)
+2. Or move Kiro's cache to D: drive
+3. Or create files manually using a text editor
+
+All code structure and patterns are established in the existing 49 files.

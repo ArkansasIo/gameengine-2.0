@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LunaLite API Reference - RPG Maker MZ</title>
+    <link rel="stylesheet" href="api-gui.css">
+</head>
+<body>
+    <div class="rpg-container">
+        <!-- Header Section -->
+        <header class="rpg-header">
+            <div class="header-content">
+                <h1 class="title-text">LunaLite API Reference</h1>
+                <p class="subtitle-text">RPG Maker MZ & MV Documentation</p>
+            </div>
+        </header>
+
+        <!-- Main Content Area -->
+        <main class="rpg-main">
+            <!-- Sidebar Navigation -->
+            <aside class="rpg-sidebar">
+                <div class="window-frame">
+                    <div class="window-header">Navigation</div>
+                    <div class="window-content">
+                        <nav class="nav-menu">
+                            <ul class="menu-list">
+                                <li class="menu-item active"><a href="#classes">Classes</a></li>
+                                <li class="menu-item"><a href="#interfaces">Interfaces</a></li>
+                                <li class="menu-item"><a href="#enums">Enumerations</a></li>
+                                <li class="menu-item"><a href="#modules">Modules</a></li>
+                                <li class="menu-item"><a href="#globals">Global Functions</a></li>
+                                <li class="menu-item"><a href="#search">Search API</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+
+                <div class="window-frame" style="margin-top: 20px;">
+                    <div class="window-header">Categories</div>
+                    <div class="window-content">
+                        <div class="category-list">
+                            <button class="category-btn active">Graphics</button>
+                            <button class="category-btn">Audio</button>
+                            <button class="category-btn">Input</button>
+                            <button class="category-btn">Game Objects</button>
+                            <button class="category-btn">Scenes & Windows</button>
+                            <button class="category-btn">Utils</button>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Content Section -->
+            <section class="rpg-content">
+                <!-- Welcome Panel -->
+                <div class="window-frame welcome-panel">
+                    <div class="window-header">Welcome to LunaLite</div>
+                    <div class="window-content">
+                        <p>LunaLite is a modern documentation system for RPG Maker MZ and MV. Choose a category from the navigation panel to explore the API.</p>
+                        <div class="info-box">
+                            <strong>Getting Started:</strong> Browse through classes, interfaces, and modules to understand the complete API structure.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Classes Section -->
+                <div id="classes" class="window-frame">
+                    <div class="window-header">Core Classes</div>
+                    <div class="window-content">
+                        <div class="class-grid">
+                            <div class="api-card">
+                                <div class="card-header">Graphics</div>
+                                <div class="card-body">
+                                    <p>The rendering system for visual content with resolution and scaling support.</p>
+                                    <span class="badge badge-graphics">Core</span>
+                                </div>
+                            </div>
+
+                            <div class="api-card">
+                                <div class="card-header">AudioManager</div>
+                                <div class="card-body">
+                                    <p>Audio playback system for BGM, SFX, and ME audio files.</p>
+                                    <span class="badge badge-audio">Audio</span>
+                                </div>
+                            </div>
+
+                            <div class="api-card">
+                                <div class="card-header">Input</div>
+                                <div class="card-body">
+                                    <p>Keyboard, gamepad, and touch input handling.</p>
+                                    <span class="badge badge-input">Input</span>
+                                </div>
+                            </div>
+
+                            <div class="api-card">
+                                <div class="card-header">SceneManager</div>
+                                <div class="card-body">
+                                    <p>Scene initialization and management system.</p>
+                                    <span class="badge badge-system">System</span>
+                                </div>
+                            </div>
+
+                            <div class="api-card">
+                                <div class="card-header">Sprite</div>
+                                <div class="card-body">
+                                    <p>PIXI sprite wrapper with animation support.</p>
+                                    <span class="badge badge-graphics">Graphics</span>
+                                </div>
+                            </div>
+
+                            <div class="api-card">
+                                <div class="card-header">Window</div>
+                                <div class="card-body">
+                                    <p>Base window class for UI elements with selectable content.</p>
+                                    <span class="badge badge-ui">UI</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Methods Reference Panel -->
+                <div class="window-frame" style="margin-top: 20px;">
+                    <div class="window-header">Quick Reference</div>
+                    <div class="window-content">
+                        <div class="reference-table">
+                            <div class="table-row header-row">
+                                <div class="table-cell">Method</div>
+                                <div class="table-cell">Class</div>
+                                <div class="table-cell">Type</div>
+                            </div>
+                            <div class="table-row">
+                                <div class="table-cell"><code>initialize()</code></div>
+                                <div class="table-cell">Most Classes</div>
+                                <div class="table-cell"><span class="type-tag">Function</span></div>
+                            </div>
+                            <div class="table-row">
+                                <div class="table-cell"><code>update()</code></div>
+                                <div class="table-cell">Game Objects</div>
+                                <div class="table-cell"><span class="type-tag">Function</span></div>
+                            </div>
+                            <div class="table-row">
+                                <div class="table-cell"><code>draw()</code></div>
+                                <div class="table-cell">Graphics</div>
+                                <div class="table-cell"><span class="type-tag">Function</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Status Bar -->
+                <div class="status-bar-frame">
+                    <div class="status-bar">
+                        <div class="status-item">
+                            <span class="status-label">Total Classes:</span>
+                            <span class="status-value">50+</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-label">Total Methods:</span>
+                            <span class="status-value">500+</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-label">Version:</span>
+                            <span class="status-value">1.0.0</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-label">Status:</span>
+                            <span class="status-value online">Online</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="rpg-footer">
+            <div class="footer-content">
+                <p>&copy; 2024 LunaLite Documentation. Designed for RPG Maker MZ & MV</p>
+                <p class="version-info">LunaLite v1.0.0</p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="api-gui.js"></script>
+</body>
+</html>

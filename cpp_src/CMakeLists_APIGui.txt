@@ -1,0 +1,67 @@
+# LunaLite API GUI - Qt Desktop Application CMake Configuration
+
+cmake_minimum_required(VERSION 3.16)
+project(LunaLiteAPIGUI)
+
+# Set C++ standard
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# Find Qt5
+find_package(Qt5 COMPONENTS 
+    Core 
+    Gui 
+    Widgets 
+    Network
+    Sql
+    Concurrent
+    PrintSupport
+    REQUIRED
+)
+
+# Enable Qt5 automoc, uic, and rcc
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
+set(CMAKE_AUTOUIC ON)
+
+# Include directories
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+
+# Source files
+set(SOURCES
+    main.cpp
+    APIGUIWindow.cpp
+    APIGUIWindow.h
+)
+
+# Create executable
+add_executable(${PROJECT_NAME} ${SOURCES})
+
+# Link Qt5 libraries
+target_link_libraries(${PROJECT_NAME} PRIVATE
+    Qt5::Core
+    Qt5::Gui
+    Qt5::Widgets
+    Qt5::Network
+    Qt5::Sql
+    Qt5::Concurrent
+    Qt5::PrintSupport
+)
+
+# Platform-specific settings
+if(WIN32)
+    # Windows-specific settings
+    set_target_properties(${PROJECT_NAME} PROPERTIES WIN32_EXECUTABLE ON)
+elseif(APPLE)
+    # macOS-specific settings
+    set_target_properties(${PROJECT_NAME} PROPERTIES MACOSX_BUNDLE ON)
+elseif(UNIX)
+    # Linux-specific settings
+    target_compile_options(${PROJECT_NAME} PRIVATE -fPIC)
+endif()
+
+# Installation
+install(TARGETS ${PROJECT_NAME}
+    RUNTIME DESTINATION bin
+    BUNDLE DESTINATION Applications
+)

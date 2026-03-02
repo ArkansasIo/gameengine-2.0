@@ -1,0 +1,86 @@
+# WolfMan Alpha CMake Configuration
+# This file configures the building of the WolfMan Alpha game engine library
+
+# Minimum required CMake version
+cmake_minimum_required(VERSION 3.16)
+
+# Project name
+project(WolfManAlpha)
+
+# C++ standard
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
+
+# Qt configuration
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
+set(CMAKE_AUTOUIC ON)
+find_package(Qt5 COMPONENTS Core Gui Widgets Multimedia Network REQUIRED)
+
+# Source files
+set(WOLFMAN_HEADERS
+    include/wolfman/Core.h
+    include/wolfman/EntityComponentSystem.h
+    include/wolfman/Physics.h
+    include/wolfman/Renderer.h
+    include/wolfman/InputManager.h
+    include/wolfman/AudioManager.h
+    include/wolfman/ParticleSystem.h
+    include/wolfman/AI.h
+    include/wolfman/Scripting.h
+    include/wolfman/Network.h
+    include/wolfman/Debug.h
+    include/wolfman/Utils.h
+    include/wolfman/WolfManAlpha.h
+)
+
+set(WOLFMAN_SOURCES
+    src/wolfman/Core.cpp
+    src/wolfman/EntityComponentSystem.cpp
+    src/wolfman/Physics.cpp
+    src/wolfman/Renderer.cpp
+    src/wolfman/InputManager.cpp
+    src/wolfman/AudioManager.cpp
+    src/wolfman/ParticleSystem.cpp
+    src/wolfman/AI.cpp
+    src/wolfman/Scripting.cpp
+    src/wolfman/Network.cpp
+    src/wolfman/Debug.cpp
+    src/wolfman/Utils.cpp
+    src/wolfman/WolfManAlpha.cpp
+)
+
+# Create library
+add_library(WolfManAlpha STATIC ${WOLFMAN_HEADERS} ${WOLFMAN_SOURCES})
+
+# Include directories
+target_include_directories(WolfManAlpha PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
+
+# Link Qt libraries
+target_link_libraries(WolfManAlpha PUBLIC
+    Qt5::Core
+    Qt5::Gui
+    Qt5::Widgets
+    Qt5::Multimedia
+    Qt5::Network
+)
+
+# Optional: Create a test executable
+add_executable(WolfManAlphaTest test/main.cpp)
+target_link_libraries(WolfManAlphaTest PRIVATE WolfManAlpha)
+target_include_directories(WolfManAlphaTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
+
+# Optional: Create demo/example executable
+add_executable(WolfManAlphaDemo examples/demo.cpp)
+target_link_libraries(WolfManAlphaDemo PRIVATE WolfManAlpha)
+target_include_directories(WolfManAlphaDemo PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
+
+# Display summary
+message(STATUS "WolfMan Alpha Configuration:")
+message(STATUS "  Headers: ${WOLFMAN_HEADERS}")
+message(STATUS "  Sources: ${WOLFMAN_SOURCES}")
+message(STATUS "  Qt Version: ${Qt5_VERSION}")
+message(STATUS "  C++ Standard: ${CMAKE_CXX_STANDARD}")
